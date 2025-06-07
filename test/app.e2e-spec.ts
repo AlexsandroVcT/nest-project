@@ -3,13 +3,18 @@ import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
 import { App } from 'supertest/types';
 import { AppModule } from './../src/app.module';
+import { ConfigModule, ConfigService } from '@nestjs/config'; // 🔥 Importação necessária
 
 describe('AppController (e2e)', () => {
   let app: INestApplication<App>;
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
+      imports: [
+        ConfigModule.forRoot(), // 🔥 ConfigModule registrado corretamente
+        AppModule,
+      ],
+      providers: [ConfigService], // 🔥 Garante que ConfigService esteja presente
     }).compile();
 
     app = moduleFixture.createNestApplication();

@@ -1,11 +1,12 @@
+import { EnvConfigService } from '../../infrastructure/env-config/env-config.service';
 import { DynamicModule, Module } from '@nestjs/common';
-import { EnvConfigService } from './env-config.service';
-import { ConfigModule, ConfigModuleOptions } from '@nestjs/config';
+import { ConfigModule, ConfigModuleOptions, ConfigService } from '@nestjs/config';
 import { join } from 'path';
 
-
 @Module({
-  providers: [EnvConfigService],
+  imports: [ConfigModule.forRoot()], // 🔥 ConfigModule importado corretamente
+  providers: [EnvConfigService, ConfigService], // 🔥 Corrigido: Apenas uma instância de EnvConfigService
+  exports: [EnvConfigService, ConfigService], // 🔥 ConfigService e EnvConfigService acessíveis para outros módulos
 })
 export class EnvConfigModule {
   static forRoot(options: ConfigModuleOptions = {}): DynamicModule {
@@ -14,11 +15,11 @@ export class EnvConfigModule {
       imports: [
         ConfigModule.forRoot({
           ...options,
-          envFilePath: [join(__dirname, `../../../../.env${process.env.NODE_ENV}`),],
+          envFilePath: [join(__dirname, `../../../../.env${process.env.NODE_ENV}`)],
         }),
       ],
-      providers: [EnvConfigService],
-      exports: [EnvConfigService],
+      providers: [EnvConfigService, ConfigService], // 🔥 Correto agora!
+      exports: [EnvConfigService, ConfigService], // 🔥 Garantindo que os serviços estejam acessíveis
     };
   }
 }

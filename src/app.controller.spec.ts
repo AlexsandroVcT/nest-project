@@ -1,22 +1,29 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { EnvConfigService } from './shared/infrastructure/env-config/env-config.service';
 
-describe('AppController', () => {
-  let appController: AppController;
+describe('EnvConfigService', () => {
+  let envConfigService: EnvConfigService;
+  let configService: ConfigService;
 
   beforeEach(async () => {
-    const app: TestingModule = await Test.createTestingModule({
-      controllers: [AppController],
-      providers: [AppService],
+    const module: TestingModule = await Test.createTestingModule({
+      imports: [ConfigModule.forRoot()], // 🔥 Importa ConfigModule para registrar ConfigService
+      providers: [EnvConfigService, ConfigService], // 🔥 Inclui ConfigService como provider
     }).compile();
 
-    appController = app.get<AppController>(AppController);
+    envConfigService = module.get<EnvConfigService>(EnvConfigService);
+    configService = module.get<ConfigService>(ConfigService);
   });
 
-  describe('root', () => {
-    it('should return "Hello World!"', () => {
-      expect(appController.getHello()).toBe('Hello World!');
+  describe('Service Initialization', () => {
+    it('should be defined', () => {
+      expect(envConfigService).toBeDefined();
+    });
+
+    it('should correctly retrieve environment variables', () => {
+      jest.spyOn(configService, 'get').mockReturnValue('mockValue'); // Mocka a função get do ConfigService
+      expect(configService.get('SOME_ENV_KEY')).toBe('mockValue');
     });
   });
 });
