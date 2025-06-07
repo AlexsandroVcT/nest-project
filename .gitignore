@@ -60,3 +60,5 @@ pids
 
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+## rodando: node dist/src/main.js / yarn start:dev / yarn start:prod
