@@ -21,4 +21,10 @@ describe('UserEnti unit tests', () => {
     expect(sut.props.password).toBe(props.password);
     expect(sut.props.createdAt).toBeInstanceOf(Date);
     });
+
+    it('Getter of field', () => {
+      expect(sut.props.name).toBeDefined()
+      expect(sut.props.name).toEqual(props.name)
+      expect(typeof sut.props.name).toBe('string');
+    })
   });
